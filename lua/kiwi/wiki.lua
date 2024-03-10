@@ -21,11 +21,22 @@ M.open_wiki_index = function(name)
   end
   local wiki_index_path = config.path .. sep .. "index.md"
   local buffer_number = vim.fn.bufnr(wiki_index_path, true)
-  vim.api.nvim_win_set_buf(0, buffer_number)
+  M.kiwi_buf_settings(buffer_number)
+end
+
+M.kiwi_buf_settings = function(buffer_number)
+-- default keymappings
   local opts = { noremap = true, silent = true, nowait = true }
+  vim.api.nvim_win_set_buf(0, buffer_number)
   vim.api.nvim_buf_set_keymap(buffer_number, "v", "<CR>", ":'<,'>lua require(\"kiwi\").create_or_open_wiki_file()<CR>", opts)
   vim.api.nvim_buf_set_keymap(buffer_number, "n", "<CR>", ":lua require(\"kiwi\").open_link()<CR>", opts)
   vim.api.nvim_buf_set_keymap(buffer_number, "n", "<Tab>", ":let @/=\"\\\\[.\\\\{-}\\\\]\"<CR>nl", opts)
+-- Conceal links and checkboxes
+  local buffer = vim.api.nvim_get_current_buf()
+  local highlighter = require "vim.treesitter.highlighter"
+  if highlighter.active[buffer] then
+		vim.opt_local.conceallevel=1
+	end
 end
 
 -- Create a new Wiki entry in Journal folder on highlighting word and pressing <CR>
@@ -41,10 +52,7 @@ M.create_or_open_wiki_file = function()
   vim.api.nvim_set_current_line(newline)
   local buffer_number = vim.fn.bufnr(config.path .. utils.get_relative_path(config) .. sep .. filename, true)
   vim.api.nvim_win_set_buf(0, buffer_number)
-  local opts = { noremap = true, silent = true, nowait = true }
-  vim.api.nvim_buf_set_keymap(buffer_number, "v", "<CR>", ":'<,'>lua require(\"kiwi\").create_or_open_wiki_file()<CR>", opts)
-  vim.api.nvim_buf_set_keymap(buffer_number, "n", "<CR>", ":lua require(\"kiwi\").open_link()<CR>", opts)
-  vim.api.nvim_buf_set_keymap(buffer_number, "n", "<Tab>", ":let @/=\"\\\\[.\\\\{-}\\\\]\"<CR>nl", opts)
+  M.kiwi_buf_settings(buffer_number)
 end
 
 -- Open a link under the cursor
@@ -59,10 +67,7 @@ M.open_link = function()
     local buffer_number = vim.fn.bufnr(filename, true)
     if buffer_number ~= -1 then
       vim.api.nvim_win_set_buf(0, buffer_number)
-      local opts = { noremap = true, silent = true, nowait = true }
-      vim.api.nvim_buf_set_keymap(buffer_number, "v", "<CR>", ":'<,'>lua require(\"kiwi\").create_or_open_wiki_file()<CR>", opts)
-      vim.api.nvim_buf_set_keymap(buffer_number, "n", "<CR>", ":lua require(\"kiwi\").open_link()<CR>", opts)
-      vim.api.nvim_buf_set_keymap(buffer_number, "n", "<Tab>", ":let @/=\"\\\\[.\\\\{-}\\\\]\"<CR>nl", opts)
+      M.kiwi_buf_settings(buffer_number)
     end
   else
     vim.print("E: Cannot find file")
