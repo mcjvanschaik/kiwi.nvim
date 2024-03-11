@@ -99,11 +99,12 @@ files there.
 Moving around
 -------------
 
-You can jump to the next hyperlink in the current file by pressing `tab`, by
-pressing `enter`, the file it refers to will be opened.
+You can jump to the next hyperlink in the current file by pressing `tab`, or
+the previous hyperlink by pressing `shift-tab`, by pressing `enter`, the file
+the hyperlink refers to will be opened.
 
-To quickly return to the file from which you followed the hyperlink, you can use
-the standard vim key `<ctrl-o>`.
+To quickly return to the previous jump location from which you followed the
+hyperlink, you can use the standard vim key `<ctrl-o>`.
 
 
 Managing todo items 					*kiwi-todo*
