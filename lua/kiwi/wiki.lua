@@ -30,7 +30,8 @@ M.kiwi_buf_settings = function(buffer_number)
   vim.api.nvim_win_set_buf(0, buffer_number)
   vim.api.nvim_buf_set_keymap(buffer_number, "v", "<CR>", ":'<,'>lua require(\"kiwi\").create_or_open_wiki_file()<CR>", opts)
   vim.api.nvim_buf_set_keymap(buffer_number, "n", "<CR>", ":lua require(\"kiwi\").open_link()<CR>", opts)
-  vim.api.nvim_buf_set_keymap(buffer_number, "n", "<Tab>", ":let @/=\"\\\\[.\\\\{-}\\\\]\"<CR>nl", opts)
+  vim.api.nvim_buf_set_keymap(buffer_number, "n", "<Tab>", "/\\[.*\\]\\(.*\\)<CR>l", opts)
+  vim.api.nvim_buf_set_keymap(buffer_number, "n", "<S-Tab>", "/\\[.*\\]\\(.*\\)<CR>NNl", opts)
 -- Conceal links and checkboxes
   local buffer = vim.api.nvim_get_current_buf()
   local highlighter = require "vim.treesitter.highlighter"
